@@ -34,7 +34,23 @@ Neither consumer calls a vulnerable API, and neither passes a buffer. Forcing uu
 
 ## Known non-alert findings (out of scope)
 
-`npm audit` additionally flags brace-expansion, js-yaml, diff, and nanoid (all via mocha@9, no Dependabot alerts as of the review date). diff and nanoid have no fix within mocha 9's tree — resolving them requires a mocha 9 → 11 migration, tracked as future maintenance.
+`npm audit` additionally flags brace-expansion, js-yaml, diff, and nanoid (all via mocha@9, no Dependabot alerts as of the review date). diff and nanoid have no fix within mocha 9's tree — resolving them requires a mocha 9 → 11 migration, tracked as future maintenance. *(Update 2026-06-12: js-yaml subsequently received a Dependabot mapping (alert #19) and was fixed via the `js-yaml: ^4.1.1` override → 4.2.0.)*
+
+## Cargo.lock alerts (2026-06-12 fresh scan — alerts #22–#31)
+
+A full Dependabot re-scan surfaced 10 Rust alerts in the root `Cargo.lock`. **8 fixed via in-semver `cargo update --precise`** (rustls-webpki → 0.103.13, quinn-proto → 0.11.14, bytes → 1.11.1, keccak → 0.1.6, rand 0.8.5 → 0.8.6, rand 0.9.2 → 0.9.3); **2 dismissed** with the evidence below.
+
+**MSRV gate:** platform-tools v1.51 bundles rustc **1.84.1**; modern cargo hard-errors when a locked crate's `rust-version` exceeds the toolchain. Every applied bump was verified MSRV ≤ 1.84.1 (worst: quinn-proto 1.74.1).
+
+**Verification limits (honest):** neither `cargo check` nor `anchor build` passes on a host without the Arcium CLI build pipeline — *including on the unmodified baseline* (arcis proc-macros panic outside `arcium build`). The applied changes are lockfile-only, semver-compatible patch/minor bumps, MSRV-verified; the next `arcium build` from a proper toolchain is the final gate.
+
+### Alert #23 — time >= 0.3.6 < 0.3.47 (GHSA-r6v5-fh4h-64xc, medium) — `no_bandwidth`
+
+The only patched release (0.3.47) declares `rust-version = 1.88.0`, above platform-tools v1.51's rustc 1.84.1. `time` sits in the arcis-compiler / proc-macro graph (`x509-parser`/`rcgen` ← `arcium-primitives` ← `arcis`), which the platform-tools cargo builds — pinning 0.3.47 would make the build refuse outright. Reverted to baseline 0.3.46. **Re-evaluate when platform-tools ships rustc ≥ 1.88** (or the arcium SDK drops the x509-parser path).
+
+### Alert #30 — rand >= 0.7.0 < 0.8.6 (GHSA-cq8v-f236-94qc, low) — residual 0.7.3 `not_used`
+
+The 0.8.5 instance was bumped to patched 0.8.6; the alert continues to match only `rand@0.7.3`, which has no 0.7.x patch. Sole chain: `libsecp256k1 v0.6.0` (key-generation feature) ← `solana-secp256k1-recover` ← `solana-program`. The recover path performs pure signature recovery — it never invokes an RNG (and the on-chain BPF environment has no entropy source; key-generation APIs are unused). Forcing 0.7 → 0.8 across libsecp256k1's declared range is a cross-major gamble into the pinned solana-program graph for zero reachable risk.
 
 ## Verification procedure
 
