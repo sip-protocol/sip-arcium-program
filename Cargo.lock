@@ -333,7 +333,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "16e8996fb98ff55edd196029396f752d78337c0fefffbc63cfd6b50de6e00d0e"
 dependencies = [
  "aes",
- "arcis-interface",
+ "arcis-interface 0.6.5",
  "arcis-internal-expr-macro",
  "arcium-core-utils",
  "arcium-primitives",
@@ -381,6 +381,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "arcis-interface"
+version = "0.10.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "5171e3ccfe8e15dd25a1e3e291ebf2d9cfff5790f9daada57ab4a5e14d336bd2"
+dependencies = [
+ "serde",
+ "serde_json",
+]
+
+[[package]]
 name = "arcis-internal-expr-macro"
 version = "0.6.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -400,7 +410,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0ec9c84588e66204d27bf369d9ef57d752c070541863c795916e9b0e05f7593e"
 dependencies = [
  "arcis-compiler",
- "arcis-interface",
+ "arcis-interface 0.6.5",
  "cargo_metadata",
  "ff",
  "indexmap 2.13.0",
@@ -430,7 +440,7 @@ dependencies = [
  "anchor-lang",
  "anchor-spl",
  "arcium-client",
- "arcium-macros",
+ "arcium-macros 0.6.5",
  "sha2-const-stable",
  "solana-alt-bn128-bls",
 ]
@@ -479,7 +489,22 @@ version = "0.6.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "356cdd7d3a2ac99a520ac51e218f2e82e1f9984592169a3584e0825746bf9238"
 dependencies = [
- "arcis-interface",
+ "arcis-interface 0.6.5",
+ "convert_case",
+ "proc-macro2",
+ "quote",
+ "serde_json",
+ "sha2 0.10.9",
+ "syn 2.0.114",
+]
+
+[[package]]
+name = "arcium-macros"
+version = "0.10.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d243d274971e381fdd15363a6f3762e8a5bf393f26242ee62a6b6e93fb250dcd"
+dependencies = [
+ "arcis-interface 0.10.4",
  "convert_case",
  "proc-macro2",
  "quote",
@@ -3070,7 +3095,7 @@ dependencies = [
  "security-framework",
  "security-framework-sys",
  "webpki-root-certs",
- "windows-sys 0.60.2",
+ "windows-sys 0.61.2",
 ]
 
 [[package]]
@@ -3364,7 +3389,7 @@ dependencies = [
  "anchor-lang",
  "arcium-anchor",
  "arcium-client",
- "arcium-macros",
+ "arcium-macros 0.10.4",
 ]
 
 [[package]]
@@ -5191,7 +5216,7 @@ version = "0.1.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c2a7b1c03c876122aa43f3020e6c3c3ee5c05081c9a00739faf7503aeba10d22"
 dependencies = [
- "windows-sys 0.60.2",
+ "windows-sys 0.61.2",
 ]
 
 [[package]]
