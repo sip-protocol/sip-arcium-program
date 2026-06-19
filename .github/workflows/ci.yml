@@ -1,0 +1,41 @@
+# PR verification for Dependabot bumps and changes.
+#
+# Scope note: the on-chain Anchor program (programs/sip_arcium_transfer) cannot
+# be compiled here — its #[arcium_program]/#[arcium_callback] macros require the
+# Arcis circuits to be pre-compiled to build/*.arcis by the Arcium toolchain
+# (`arcium build` + solana + anchor). Standing up that toolchain in CI is tracked
+# alongside the Anchor 1.0 toolchain reconciliation (sip-protocol/sip-protocol#1161).
+# Until then this workflow verifies what compiles/resolves without it: the Arcis
+# circuit crate (encrypted-ixs, which exercises the arcis/blake3/arcium-core deps)
+# and the npm lockfile.
+
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  circuit-crate:
+    name: cargo check (encrypted-ixs)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@1.89.0
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo check -p encrypted-ixs
+
+  npm-install:
+    name: npm ci
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
