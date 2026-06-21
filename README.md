@@ -19,8 +19,8 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Rust](https://img.shields.io/badge/Rust-1.75-orange?logo=rust&logoColor=white)](https://www.rust-lang.org/)
-[![Anchor](https://img.shields.io/badge/Anchor-0.30-blueviolet)](https://www.anchor-lang.com/)
-[![Arcium](https://img.shields.io/badge/Arcium-0.6.5-00D4AA)](https://arcium.com/)
+[![Anchor](https://img.shields.io/badge/Anchor-1.0-blueviolet)](https://www.anchor-lang.com/)
+[![Arcium](https://img.shields.io/badge/Arcium-0.10.4-00D4AA)](https://arcium.com/)
 [![Solana](https://img.shields.io/badge/Solana-Devnet-9945FF?logo=solana&logoColor=white)](https://solana.com/)
 
 **Solana Privacy Hackathon 2026** | [Arcium Track Submission](https://sip-protocol.org/showcase/solana-privacy-2026)
@@ -206,8 +206,6 @@ sip-arcium-program/
 │           └── validate_swap()      # Swap validation circuit
 ├── scripts/
 │   └── init-comp-defs.ts       # Deploy computation definitions
-├── tests/
-│   └── sip_arcium_transfer.ts  # Integration tests
 ├── Anchor.toml                 # Anchor config
 ├── Arcium.toml                 # Arcium MXE config
 └── Cargo.toml                  # Rust dependencies
@@ -258,9 +256,9 @@ User Input → Encrypt (x25519) → Anchor Program → MXE Queue
 
 ### Prerequisites
 
-- Rust 1.75+
-- Solana CLI 1.18+
-- Anchor 0.30+
+- Rust 1.89+
+- Solana CLI 2.1+
+- Anchor 1.0+
 - Node.js 20+
 
 ### Setup
@@ -274,10 +272,10 @@ cd sip-arcium-program
 yarn install
 
 # Build program + circuits
-anchor build
+arcium build
 
 # Run tests
-anchor test
+arcium test
 
 # Deploy to devnet
 anchor deploy --provider.cluster devnet
@@ -296,7 +294,7 @@ arcium localnet
 anchor deploy --provider.cluster localnet
 
 # Test with local MXE
-anchor test --provider.cluster localnet
+arcium test --provider.cluster localnet
 ```
 
 ---
@@ -355,9 +353,9 @@ private_transfer(
 
 | Category | Technology | Purpose |
 |----------|------------|---------|
-| **Language** | Rust 1.75 | Program + circuits |
-| **Framework** | Anchor 0.30 | Solana program framework |
-| **MPC** | Arcium SDK 0.6.5 | Confidential computation |
+| **Language** | Rust 1.89 | Program + circuits |
+| **Framework** | Anchor 1.0 | Solana program framework |
+| **MPC** | Arcium SDK 0.10.4 | Confidential computation |
 | **Circuits** | Arcis | MPC circuit DSL |
 | **Encryption** | x25519 | Input/output encryption |
 | **Testing** | Mocha + Chai | Integration tests |
@@ -371,10 +369,10 @@ private_transfer(
 
 ```bash
 # Build everything
-anchor build
+arcium build
 
 # Run tests
-anchor test
+arcium test
 
 # Deploy to devnet
 anchor deploy --provider.cluster devnet
@@ -418,8 +416,8 @@ pub fn my_circuit_callback(ctx: Context<MyCircuitCallback>, output: /* ... */) -
 3. Rebuild and test:
 
 ```bash
-anchor build
-anchor test
+arcium build
+arcium test
 ```
 
 ---

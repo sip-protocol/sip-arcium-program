@@ -4,20 +4,19 @@
  * Run: npx ts-node scripts/init-comp-defs.ts
  */
 
-import * as anchor from "@coral-xyz/anchor"
-import { Program } from "@coral-xyz/anchor"
+import * as anchor from "@anchor-lang/core"
+import { Program } from "@anchor-lang/core"
 import { PublicKey, Keypair } from "@solana/web3.js"
 import * as fs from "fs"
 import * as os from "os"
 import { SipArciumTransfer } from "../target/types/sip_arcium_transfer"
 import {
-  getArciumEnv,
+  getArciumProgram,
+  getLookupTableAddress,
   getMXEAccAddress,
   getCompDefAccAddress,
   getCompDefAccOffset,
 } from "@arcium-hq/client"
-
-const CLUSTER_OFFSET = 456 // Devnet v0.6.3 cluster
 
 async function main() {
   // Setup provider
@@ -54,6 +53,16 @@ async function main() {
   const mxeAccount = getMXEAccAddress(program.programId)
   console.log("MXE Account:", mxeAccount.toBase58())
 
+  // The init_*_comp_def instructions require the MXE's address lookup table
+  // (Arcium 0.7+). Derive it from the MXE account's lut_offset_slot.
+  const arciumProgram = getArciumProgram(provider)
+  const mxeAccountData = await arciumProgram.account.mxeAccount.fetch(mxeAccount)
+  const addressLookupTable = getLookupTableAddress(
+    program.programId,
+    mxeAccountData.lutOffsetSlot
+  )
+  console.log("Address Lookup Table:", addressLookupTable.toBase58())
+
   // Initialize computation definitions
   const compDefs = [
     "private_transfer",
@@ -82,10 +91,11 @@ async function main() {
       const methodName = `init${name.split('_').map(w => w[0].toUpperCase() + w.slice(1)).join('')}CompDef`
 
       const tx = await (program.methods as any)[methodName]()
-        .accounts({
+        .accountsPartial({
           payer: wallet.publicKey,
           mxeAccount,
           compDefAccount,
+          addressLookupTable,
         })
         .rpc()
 

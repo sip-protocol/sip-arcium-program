@@ -29,19 +29,19 @@ pub mod sip_arcium_transfer {
     pub fn init_private_transfer_comp_def(
         ctx: Context<InitPrivateTransferCompDef>,
     ) -> Result<()> {
-        init_comp_def(ctx.accounts, None, None)?;
+        init_computation_def(ctx.accounts, None)?;
         Ok(())
     }
 
     /// Initialize the check_balance computation definition
     pub fn init_check_balance_comp_def(ctx: Context<InitCheckBalanceCompDef>) -> Result<()> {
-        init_comp_def(ctx.accounts, None, None)?;
+        init_computation_def(ctx.accounts, None)?;
         Ok(())
     }
 
     /// Initialize the validate_swap computation definition
     pub fn init_validate_swap_comp_def(ctx: Context<InitValidateSwapCompDef>) -> Result<()> {
-        init_comp_def(ctx.accounts, None, None)?;
+        init_computation_def(ctx.accounts, None)?;
         Ok(())
     }
 
@@ -82,7 +82,6 @@ pub mod sip_arcium_transfer {
             ctx.accounts,
             computation_offset,
             args,
-            None,
             vec![PrivateTransferCallback::callback_ix(
                 computation_offset,
                 &ctx.accounts.mxe_account,
@@ -148,7 +147,6 @@ pub mod sip_arcium_transfer {
             ctx.accounts,
             computation_offset,
             args,
-            None,
             vec![CheckBalanceCallback::callback_ix(
                 computation_offset,
                 &ctx.accounts.mxe_account,
@@ -214,7 +212,6 @@ pub mod sip_arcium_transfer {
             ctx.accounts,
             computation_offset,
             args,
-            None,
             vec![ValidateSwapCallback::callback_ix(
                 computation_offset,
                 &ctx.accounts.mxe_account,
@@ -277,20 +274,20 @@ pub struct PrivateTransfer<'info> {
     )]
     pub sign_pda_account: Account<'info, ArciumSignerAccount>,
     #[account(address = derive_mxe_pda!())]
-    pub mxe_account: Account<'info, MXEAccount>,
-    #[account(mut, address = derive_mempool_pda!(mxe_account, ErrorCode::ClusterNotSet))]
+    pub mxe_account: Box<Account<'info, MXEAccount>>,
+    #[account(mut, address = derive_mempool_pda!(mxe_account))]
     /// CHECK: mempool_account
     pub mempool_account: UncheckedAccount<'info>,
-    #[account(mut, address = derive_execpool_pda!(mxe_account, ErrorCode::ClusterNotSet))]
+    #[account(mut, address = derive_execpool_pda!(mxe_account))]
     /// CHECK: executing_pool
     pub executing_pool: UncheckedAccount<'info>,
-    #[account(mut, address = derive_comp_pda!(computation_offset, mxe_account, ErrorCode::ClusterNotSet))]
+    #[account(mut, address = derive_comp_pda!(computation_offset, mxe_account))]
     /// CHECK: computation_account
     pub computation_account: UncheckedAccount<'info>,
     #[account(address = derive_comp_def_pda!(COMP_DEF_OFFSET_PRIVATE_TRANSFER))]
-    pub comp_def_account: Account<'info, ComputationDefinitionAccount>,
-    #[account(mut, address = derive_cluster_pda!(mxe_account, ErrorCode::ClusterNotSet))]
-    pub cluster_account: Account<'info, Cluster>,
+    pub comp_def_account: Box<Account<'info, ComputationDefinitionAccount>>,
+    #[account(mut, address = derive_cluster_pda!(mxe_account))]
+    pub cluster_account: Box<Account<'info, Cluster>>,
     #[account(mut, address = ARCIUM_FEE_POOL_ACCOUNT_ADDRESS)]
     pub pool_account: Account<'info, FeePool>,
     #[account(mut, address = ARCIUM_CLOCK_ACCOUNT_ADDRESS)]
@@ -309,11 +306,11 @@ pub struct PrivateTransferCallback<'info> {
     pub mxe_account: Account<'info, MXEAccount>,
     /// CHECK: computation_account
     pub computation_account: UncheckedAccount<'info>,
-    #[account(address = derive_cluster_pda!(mxe_account, ErrorCode::ClusterNotSet))]
+    #[account(address = derive_cluster_pda!(mxe_account))]
     pub cluster_account: Account<'info, Cluster>,
-    #[account(address = ::anchor_lang::solana_program::sysvar::instructions::ID)]
+    #[account(address = ::arcium_anchor::solana_instructions_sysvar::ID)]
     /// CHECK: instructions_sysvar
-    pub instructions_sysvar: AccountInfo<'info>,
+    pub instructions_sysvar: UncheckedAccount<'info>,
 }
 
 #[init_computation_definition_accounts("private_transfer", payer)]
@@ -326,6 +323,15 @@ pub struct InitPrivateTransferCompDef<'info> {
     #[account(mut)]
     /// CHECK: comp_def_account
     pub comp_def_account: UncheckedAccount<'info>,
+    #[account(
+        mut,
+        address = derive_mxe_lut_pda!(mxe_account.lut_offset_slot)
+    )]
+    /// CHECK: address_lookup_table, checked by arcium program.
+    pub address_lookup_table: UncheckedAccount<'info>,
+    #[account(address = LUT_PROGRAM_ID)]
+    /// CHECK: lut_program is the Address Lookup Table program.
+    pub lut_program: UncheckedAccount<'info>,
     pub arcium_program: Program<'info, Arcium>,
     pub system_program: Program<'info, System>,
 }
@@ -347,20 +353,20 @@ pub struct CheckBalance<'info> {
     )]
     pub sign_pda_account: Account<'info, ArciumSignerAccount>,
     #[account(address = derive_mxe_pda!())]
-    pub mxe_account: Account<'info, MXEAccount>,
-    #[account(mut, address = derive_mempool_pda!(mxe_account, ErrorCode::ClusterNotSet))]
+    pub mxe_account: Box<Account<'info, MXEAccount>>,
+    #[account(mut, address = derive_mempool_pda!(mxe_account))]
     /// CHECK: mempool_account
     pub mempool_account: UncheckedAccount<'info>,
-    #[account(mut, address = derive_execpool_pda!(mxe_account, ErrorCode::ClusterNotSet))]
+    #[account(mut, address = derive_execpool_pda!(mxe_account))]
     /// CHECK: executing_pool
     pub executing_pool: UncheckedAccount<'info>,
-    #[account(mut, address = derive_comp_pda!(computation_offset, mxe_account, ErrorCode::ClusterNotSet))]
+    #[account(mut, address = derive_comp_pda!(computation_offset, mxe_account))]
     /// CHECK: computation_account
     pub computation_account: UncheckedAccount<'info>,
     #[account(address = derive_comp_def_pda!(COMP_DEF_OFFSET_CHECK_BALANCE))]
-    pub comp_def_account: Account<'info, ComputationDefinitionAccount>,
-    #[account(mut, address = derive_cluster_pda!(mxe_account, ErrorCode::ClusterNotSet))]
-    pub cluster_account: Account<'info, Cluster>,
+    pub comp_def_account: Box<Account<'info, ComputationDefinitionAccount>>,
+    #[account(mut, address = derive_cluster_pda!(mxe_account))]
+    pub cluster_account: Box<Account<'info, Cluster>>,
     #[account(mut, address = ARCIUM_FEE_POOL_ACCOUNT_ADDRESS)]
     pub pool_account: Account<'info, FeePool>,
     #[account(mut, address = ARCIUM_CLOCK_ACCOUNT_ADDRESS)]
@@ -379,11 +385,11 @@ pub struct CheckBalanceCallback<'info> {
     pub mxe_account: Account<'info, MXEAccount>,
     /// CHECK: computation_account
     pub computation_account: UncheckedAccount<'info>,
-    #[account(address = derive_cluster_pda!(mxe_account, ErrorCode::ClusterNotSet))]
+    #[account(address = derive_cluster_pda!(mxe_account))]
     pub cluster_account: Account<'info, Cluster>,
-    #[account(address = ::anchor_lang::solana_program::sysvar::instructions::ID)]
+    #[account(address = ::arcium_anchor::solana_instructions_sysvar::ID)]
     /// CHECK: instructions_sysvar
-    pub instructions_sysvar: AccountInfo<'info>,
+    pub instructions_sysvar: UncheckedAccount<'info>,
 }
 
 #[init_computation_definition_accounts("check_balance", payer)]
@@ -396,6 +402,15 @@ pub struct InitCheckBalanceCompDef<'info> {
     #[account(mut)]
     /// CHECK: comp_def_account
     pub comp_def_account: UncheckedAccount<'info>,
+    #[account(
+        mut,
+        address = derive_mxe_lut_pda!(mxe_account.lut_offset_slot)
+    )]
+    /// CHECK: address_lookup_table, checked by arcium program.
+    pub address_lookup_table: UncheckedAccount<'info>,
+    #[account(address = LUT_PROGRAM_ID)]
+    /// CHECK: lut_program is the Address Lookup Table program.
+    pub lut_program: UncheckedAccount<'info>,
     pub arcium_program: Program<'info, Arcium>,
     pub system_program: Program<'info, System>,
 }
@@ -417,20 +432,20 @@ pub struct ValidateSwap<'info> {
     )]
     pub sign_pda_account: Account<'info, ArciumSignerAccount>,
     #[account(address = derive_mxe_pda!())]
-    pub mxe_account: Account<'info, MXEAccount>,
-    #[account(mut, address = derive_mempool_pda!(mxe_account, ErrorCode::ClusterNotSet))]
+    pub mxe_account: Box<Account<'info, MXEAccount>>,
+    #[account(mut, address = derive_mempool_pda!(mxe_account))]
     /// CHECK: mempool_account
     pub mempool_account: UncheckedAccount<'info>,
-    #[account(mut, address = derive_execpool_pda!(mxe_account, ErrorCode::ClusterNotSet))]
+    #[account(mut, address = derive_execpool_pda!(mxe_account))]
     /// CHECK: executing_pool
     pub executing_pool: UncheckedAccount<'info>,
-    #[account(mut, address = derive_comp_pda!(computation_offset, mxe_account, ErrorCode::ClusterNotSet))]
+    #[account(mut, address = derive_comp_pda!(computation_offset, mxe_account))]
     /// CHECK: computation_account
     pub computation_account: UncheckedAccount<'info>,
     #[account(address = derive_comp_def_pda!(COMP_DEF_OFFSET_VALIDATE_SWAP))]
-    pub comp_def_account: Account<'info, ComputationDefinitionAccount>,
-    #[account(mut, address = derive_cluster_pda!(mxe_account, ErrorCode::ClusterNotSet))]
-    pub cluster_account: Account<'info, Cluster>,
+    pub comp_def_account: Box<Account<'info, ComputationDefinitionAccount>>,
+    #[account(mut, address = derive_cluster_pda!(mxe_account))]
+    pub cluster_account: Box<Account<'info, Cluster>>,
     #[account(mut, address = ARCIUM_FEE_POOL_ACCOUNT_ADDRESS)]
     pub pool_account: Account<'info, FeePool>,
     #[account(mut, address = ARCIUM_CLOCK_ACCOUNT_ADDRESS)]
@@ -449,11 +464,11 @@ pub struct ValidateSwapCallback<'info> {
     pub mxe_account: Account<'info, MXEAccount>,
     /// CHECK: computation_account
     pub computation_account: UncheckedAccount<'info>,
-    #[account(address = derive_cluster_pda!(mxe_account, ErrorCode::ClusterNotSet))]
+    #[account(address = derive_cluster_pda!(mxe_account))]
     pub cluster_account: Account<'info, Cluster>,
-    #[account(address = ::anchor_lang::solana_program::sysvar::instructions::ID)]
+    #[account(address = ::arcium_anchor::solana_instructions_sysvar::ID)]
     /// CHECK: instructions_sysvar
-    pub instructions_sysvar: AccountInfo<'info>,
+    pub instructions_sysvar: UncheckedAccount<'info>,
 }
 
 #[init_computation_definition_accounts("validate_swap", payer)]
@@ -466,6 +481,15 @@ pub struct InitValidateSwapCompDef<'info> {
     #[account(mut)]
     /// CHECK: comp_def_account
     pub comp_def_account: UncheckedAccount<'info>,
+    #[account(
+        mut,
+        address = derive_mxe_lut_pda!(mxe_account.lut_offset_slot)
+    )]
+    /// CHECK: address_lookup_table, checked by arcium program.
+    pub address_lookup_table: UncheckedAccount<'info>,
+    #[account(address = LUT_PROGRAM_ID)]
+    /// CHECK: lut_program is the Address Lookup Table program.
+    pub lut_program: UncheckedAccount<'info>,
     pub arcium_program: Program<'info, Arcium>,
     pub system_program: Program<'info, System>,
 }
@@ -512,6 +536,4 @@ pub struct SwapValidationEvent {
 pub enum ErrorCode {
     #[msg("The computation was aborted")]
     AbortedComputation,
-    #[msg("Cluster not set")]
-    ClusterNotSet,
 }
