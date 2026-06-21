@@ -4,8 +4,8 @@
  * Run: npx ts-node scripts/init-comp-defs.ts
  */
 
-import * as anchor from "@coral-xyz/anchor"
-import { Program } from "@coral-xyz/anchor"
+import * as anchor from "@anchor-lang/core"
+import { Program } from "@anchor-lang/core"
 import { PublicKey, Keypair } from "@solana/web3.js"
 import * as fs from "fs"
 import * as os from "os"
