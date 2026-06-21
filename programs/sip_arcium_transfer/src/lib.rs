@@ -536,6 +536,4 @@ pub struct SwapValidationEvent {
 pub enum ErrorCode {
     #[msg("The computation was aborted")]
     AbortedComputation,
-    #[msg("Cluster not set")]
-    ClusterNotSet,
 }

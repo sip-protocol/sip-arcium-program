@@ -11,15 +11,12 @@ import * as fs from "fs"
 import * as os from "os"
 import { SipArciumTransfer } from "../target/types/sip_arcium_transfer"
 import {
-  getArciumEnv,
   getArciumProgram,
   getLookupTableAddress,
   getMXEAccAddress,
   getCompDefAccAddress,
   getCompDefAccOffset,
 } from "@arcium-hq/client"
-
-const CLUSTER_OFFSET = 456 // Devnet v0.6.3 cluster
 
 async function main() {
   // Setup provider
