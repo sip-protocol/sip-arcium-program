@@ -19,8 +19,8 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Rust](https://img.shields.io/badge/Rust-1.75-orange?logo=rust&logoColor=white)](https://www.rust-lang.org/)
-[![Anchor](https://img.shields.io/badge/Anchor-0.30-blueviolet)](https://www.anchor-lang.com/)
-[![Arcium](https://img.shields.io/badge/Arcium-0.6.5-00D4AA)](https://arcium.com/)
+[![Anchor](https://img.shields.io/badge/Anchor-1.0-blueviolet)](https://www.anchor-lang.com/)
+[![Arcium](https://img.shields.io/badge/Arcium-0.10.4-00D4AA)](https://arcium.com/)
 [![Solana](https://img.shields.io/badge/Solana-Devnet-9945FF?logo=solana&logoColor=white)](https://solana.com/)
 
 **Solana Privacy Hackathon 2026** | [Arcium Track Submission](https://sip-protocol.org/showcase/solana-privacy-2026)
@@ -260,7 +260,7 @@ User Input → Encrypt (x25519) → Anchor Program → MXE Queue
 
 - Rust 1.75+
 - Solana CLI 1.18+
-- Anchor 0.30+
+- Anchor 1.0+
 - Node.js 20+
 
 ### Setup
@@ -356,8 +356,8 @@ private_transfer(
 | Category | Technology | Purpose |
 |----------|------------|---------|
 | **Language** | Rust 1.75 | Program + circuits |
-| **Framework** | Anchor 0.30 | Solana program framework |
-| **MPC** | Arcium SDK 0.6.5 | Confidential computation |
+| **Framework** | Anchor 1.0 | Solana program framework |
+| **MPC** | Arcium SDK 0.10.4 | Confidential computation |
 | **Circuits** | Arcis | MPC circuit DSL |
 | **Encryption** | x25519 | Input/output encryption |
 | **Testing** | Mocha + Chai | Integration tests |
