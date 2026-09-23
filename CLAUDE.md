@@ -9,15 +9,15 @@
 
 ## Quick Reference
 
-**Tech Stack:** Rust, Anchor, Arcium SDK (Arcis circuits)
+**Tech Stack:** Rust, Anchor 1.0.2, Arcium SDK 0.10.4 (Arcis circuits)
 **Deployment:** Solana Devnet
 
 ```bash
 # Build
-anchor build
+arcium build
 
 # Test
-anchor test
+arcium test
 
 # Deploy
 anchor deploy --provider.cluster devnet
@@ -56,7 +56,6 @@ npx ts-node scripts/init-comp-defs.ts
 | `programs/sip_arcium_transfer/src/lib.rs` | Anchor program (queue computations, callbacks) |
 | `encrypted-ixs/src/lib.rs` | Arcis MPC circuits |
 | `scripts/init-comp-defs.ts` | Initialize computation definitions on-chain |
-| `tests/sip_arcium_transfer.ts` | Integration tests |
 
 ---
 
@@ -84,8 +83,8 @@ npx ts-node scripts/init-comp-defs.ts
 ## Repo-Specific Guidelines
 
 **DO:**
-- Run `anchor build` after circuit changes
-- Test with `anchor test` before deploying
+- Run `arcium build` after circuit changes
+- Test with `arcium test` before deploying
 - Use S1P vanity addresses for consistency
 
 **DON'T:**
@@ -103,4 +102,4 @@ This program is used by sip-mobile via:
 
 ---
 
-**Last Updated:** 2026-01-29
+**Last Updated:** 2026-06-21
