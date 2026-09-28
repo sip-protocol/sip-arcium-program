@@ -314,7 +314,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "59587d95b5c439f6b4ea5c8fcb36f5d158f2d35d2c968de53e99a08c2e63c0e8"
 dependencies = [
  "aes",
- "arcis-interface",
+ "arcis-interface 0.10.4",
  "arcis-internal-expr-macro",
  "arcium-core-utils",
  "arcium-primitives",
@@ -362,6 +362,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "arcis-interface"
+version = "0.15.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "de856f6c5bd2d92b96c23e34155e641749b4851efcda975ea7abd382d5ee86be"
+dependencies = [
+ "serde",
+ "serde_json",
+ "sha2",
+]
+
+[[package]]
 name = "arcis-internal-expr-macro"
 version = "0.10.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -381,7 +392,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "227ab486f097808a98c546d81c3e52c73f79dd4c14f63f6205a234118fa0b627"
 dependencies = [
  "arcis-compiler",
- "arcis-interface",
+ "arcis-interface 0.10.4",
  "blink-alloc",
  "cargo_metadata",
  "ff",
@@ -413,7 +424,7 @@ checksum = "e656379f1b8bf73ae10b184dc38c7068e9834e7faa2c26463512002eeb60f615"
 dependencies = [
  "anchor-lang",
  "arcium-client",
- "arcium-macros",
+ "arcium-macros 0.10.4",
  "sha2-const-stable",
  "solana-address-lookup-table-interface",
  "solana-alt-bn128-bls",
@@ -468,7 +479,22 @@ version = "0.10.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d243d274971e381fdd15363a6f3762e8a5bf393f26242ee62a6b6e93fb250dcd"
 dependencies = [
- "arcis-interface",
+ "arcis-interface 0.10.4",
+ "convert_case",
+ "proc-macro2",
+ "quote",
+ "serde_json",
+ "sha2",
+ "syn 2.0.118",
+]
+
+[[package]]
+name = "arcium-macros"
+version = "0.15.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "cd93c16308eb4b0a2c103287b542ec62c9e17e6520227c1cbca63317d011ab9b"
+dependencies = [
+ "arcis-interface 0.15.0",
  "convert_case",
  "proc-macro2",
  "quote",
@@ -3278,7 +3304,7 @@ dependencies = [
  "anchor-lang",
  "arcium-anchor",
  "arcium-client",
- "arcium-macros",
+ "arcium-macros 0.15.0",
 ]
 
 [[package]]
