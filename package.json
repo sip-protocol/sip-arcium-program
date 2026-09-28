@@ -6,7 +6,7 @@
     "lint": "prettier */*.js \"*/**/*{.js,.ts}\" --check"
   },
   "dependencies": {
-    "@arcium-hq/client": "0.13.2",
+    "@arcium-hq/client": "0.15.0",
     "@anchor-lang/core": "^1.1.2"
   },
   "devDependencies": {
