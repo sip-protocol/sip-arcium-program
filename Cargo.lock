@@ -412,7 +412,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e656379f1b8bf73ae10b184dc38c7068e9834e7faa2c26463512002eeb60f615"
 dependencies = [
  "anchor-lang",
- "arcium-client",
+ "arcium-client 0.10.4",
  "arcium-macros",
  "sha2-const-stable",
  "solana-address-lookup-table-interface",
@@ -427,6 +427,33 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a1d4fadd7d5af4e4789f1a8a0425c549f788800b7078fce4b15f68cc1981b7f2"
 dependencies = [
  "anchor-lang",
+ "bytemuck",
+ "const-crypto",
+ "rand 0.8.6",
+ "solana-address-lookup-table-interface",
+ "solana-alt-bn128-bls",
+ "solana-program",
+ "solana-sdk-ids",
+ "thiserror 2.0.18",
+]
+
+[[package]]
+name = "arcium-client"
+version = "0.15.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "865b520fd37f4a37e68ea973640fc9ace31fc877d9f4108ae7a4435cf80bcd37"
+dependencies = [
+ "anchor-attribute-access-control",
+ "anchor-attribute-account",
+ "anchor-attribute-constant",
+ "anchor-attribute-error",
+ "anchor-attribute-event",
+ "anchor-attribute-program",
+ "anchor-derive-accounts",
+ "anchor-derive-serde",
+ "anchor-derive-space",
+ "anchor-lang",
+ "anchor-syn",
  "bytemuck",
  "const-crypto",
  "rand 0.8.6",
@@ -3277,7 +3304,7 @@ version = "0.1.0"
 dependencies = [
  "anchor-lang",
  "arcium-anchor",
- "arcium-client",
+ "arcium-client 0.15.0",
  "arcium-macros",
 ]
 
