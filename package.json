@@ -6,11 +6,11 @@
     "lint": "prettier */*.js \"*/**/*{.js,.ts}\" --check"
   },
   "dependencies": {
-    "@arcium-hq/client": "0.13.2",
+    "@arcium-hq/client": "0.15.0",
     "@anchor-lang/core": "^1.1.2"
   },
   "devDependencies": {
-    "chai": "^6.2.2",
+    "chai": "^6.3.0",
     "mocha": "^11.7.6",
     "ts-mocha": "^11.1.0",
     "@types/bn.js": "^5.1.0",
